@@ -1,5 +1,5 @@
-module github.com/stevenblair/fft
+module github.com/synaptecltd/fft
 
 go 1.18
 
-require scientificgo.org/testutil v0.0.0
+require github.com/scientificgo/fft v0.0.2

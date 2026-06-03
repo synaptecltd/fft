@@ -7,11 +7,11 @@ package fft_test
 import (
 	"fmt"
 	"math"
+	"math/cmplx"
 	"math/rand"
 	"testing"
 
-	. "scientificgo.org/fft"
-	"scientificgo.org/testutil"
+	"github.com/scientificgo/fft"
 )
 
 const acc = 8 // significant figures
@@ -85,8 +85,28 @@ func init() {
 
 func test(t *testing.T, inverse bool) {
 	dft := func(x []complex128) []complex128 { return dftDirect(x, inverse) }
-	fft := func(x []complex128) []complex128 { return Fft(x, inverse) }
-	testutil.Test(t, acc, cases, fft, dft)
+	fft := func(x []complex128) []complex128 { return fft.Fft(x, inverse) }
+	tol := math.Pow10(-acc)
+
+	for _, tc := range cases {
+		tc := tc
+		t.Run(tc.Label, func(t *testing.T) {
+			got := fft(tc.Input)
+			want := dft(tc.Input)
+
+			if len(got) != len(want) {
+				t.Fatalf("length mismatch: got %d, want %d", len(got), len(want))
+			}
+
+			for i := range want {
+				err := cmplx.Abs(got[i] - want[i])
+				scale := math.Max(1, cmplx.Abs(want[i]))
+				if err > tol*scale {
+					t.Fatalf("index %d mismatch: got %.12g, want %.12g, abs err %.3e, rel err %.3e", i, got[i], want[i], err, err/scale)
+				}
+			}
+		})
+	}
 }
 
 func benchmark(b *testing.B, f func([]complex128, bool) []complex128, inverse bool) {
@@ -99,7 +119,7 @@ func benchmark(b *testing.B, f func([]complex128, bool) []complex128, inverse bo
 	}
 }
 
-func TestFft(t *testing.T)        { test(t, false) }
-func TestIfft(t *testing.T)       { test(t, true) }
-func BenchmarkFft(b *testing.B)   { benchmark(b, Fft, false) }
-func BenchmarkIffti(b *testing.B) { benchmark(b, Fft, true) }
+func TestFft(t *testing.T)       { test(t, false) }
+func TestIfft(t *testing.T)      { test(t, true) }
+func BenchmarkFft(b *testing.B)  { benchmark(b, fft.Fft, false) }
+func BenchmarkIfft(b *testing.B) { benchmark(b, fft.Fft, true) }

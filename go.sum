@@ -1,2 +1,2 @@
-scientificgo.org/testutil v0.0.0 h1:y356DHRo0tAz9zIFmxlhZoKDlHPHaWW/DCm9k3PhIMA=
-scientificgo.org/testutil v0.0.0/go.mod h1:Go6R4b+9YkFocMo3H3vNQ7tjbrX9Rc12wal7NZjvPXg=
+github.com/scientificgo/fft v0.0.2 h1:K6Wv+FhMnEYVNJ2MCsNm/UAyRNt3QayNOwZWAILee84=
+github.com/scientificgo/fft v0.0.2/go.mod h1:SlHsUoEbd3eNM1tk8QUgaSt+HJCn1Cxi6mBUwNfcgHc=
